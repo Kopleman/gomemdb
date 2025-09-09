@@ -23,4 +23,4 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v2.2.2
-          args: --out-format=json
+          args: --output.json.path
