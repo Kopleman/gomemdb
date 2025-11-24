@@ -6,6 +6,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.1
 	go.uber.org/zap v1.27.0
+	golang.org/x/sync v0.18.0
 )
 
 require (

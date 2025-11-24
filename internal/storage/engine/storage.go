@@ -21,7 +21,6 @@ func newStorage() *storage {
 
 func (s *storage) Set(ctx context.Context, name string, value string) error {
 	s.data[name] = value
-
 	return nil
 }
 
