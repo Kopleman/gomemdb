@@ -33,3 +33,5 @@ go.work.sum
 
 .golangci-lint/
 .cursor/
+
+bin/
