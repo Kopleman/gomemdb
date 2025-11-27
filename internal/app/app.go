@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 
@@ -10,7 +9,6 @@ import (
 	"github.com/Kopleman/gomemdb/internal/database"
 	"github.com/Kopleman/gomemdb/internal/network"
 	"github.com/Kopleman/gomemdb/internal/storage/engine"
-	"github.com/Kopleman/gomemdb/internal/utils"
 	"github.com/Kopleman/gomemdb/pkg/config"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
@@ -18,7 +16,7 @@ import (
 
 type App struct {
 	db     *database.DataBase
-	server *network.TCPServer
+	server *network.GRPCServer
 	logger *zap.Logger
 	config *config.Config
 }
@@ -33,7 +31,7 @@ func New(cfg *config.Config, logger *zap.Logger) (*App, error) {
 		Storage: s,
 		Logger:  logger,
 	})
-	server, serverErr := CreateNetwork(cfg, logger)
+	server, serverErr := CreateNetwork(cfg, logger, c)
 	if serverErr != nil {
 		return nil, fmt.Errorf("failed to create network: %w", serverErr)
 	}
@@ -49,14 +47,8 @@ func (a *App) Start(ctx context.Context) error {
 	group, groupCtx := errgroup.WithContext(ctx)
 
 	group.Go(func() error {
-		a.server.HandleQueries(groupCtx, func(ctx context.Context, query []byte) []byte {
-			response, handleErr := a.db.HandleQuery(ctx, string(query))
-			if handleErr != nil {
-				response = fmt.Sprintf("[error] %s", handleErr.Error())
-			}
-			return []byte(fmt.Sprintf("[ok] %s", response))
-		})
-
+		// gRPC server handles queries internally via ExecuteCommand method
+		a.server.HandleQueries(groupCtx)
 		return nil
 	})
 
@@ -69,30 +61,13 @@ func (a *App) Start(ctx context.Context) error {
 	return nil
 }
 
-func CreateNetwork(cfg *config.Config, logger *zap.Logger) (*network.TCPServer, error) {
+func CreateNetwork(cfg *config.Config, logger *zap.Logger, db *database.DataBase) (*network.GRPCServer, error) {
 	address := cfg.Address
-	var options []network.TCPServerOption
+	var options []network.GRPCServerOption
 
-	if cfg.MaxConnections != 0 {
-		options = append(options, network.WithServerMaxConnectionsNumber(uint(cfg.MaxConnections)))
-	}
-
-	if cfg.MaxMessageSize != "" {
-		size, err := utils.ParseSize(cfg.MaxMessageSize)
-		if err != nil {
-			return nil, errors.New("incorrect max message size")
-		}
-
-		options = append(options, network.WithServerBufferSize(uint(size)))
-	}
-
-	if cfg.IdleTimeout != 0 {
-		options = append(options, network.WithServerIdleTimeout(cfg.IdleTimeout))
-	}
-
-	server, err := network.NewTCPServer(address, logger, options...)
+	server, err := network.NewGRPCServer(address, db, logger, options...)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create tcp server: %w", err)
+		return nil, fmt.Errorf("failed to create grpc server: %w", err)
 	}
 
 	return server, nil

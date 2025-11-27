@@ -20,16 +20,15 @@ func main() {
 		logger.Fatal("failed to parse cli cfg", zap.Error(cfgErr))
 	}
 
-	options := []network.TCPClientOption{
-		network.WithClientIdleTimeout(cfg.IdleTimeout),
-		network.WithClientBufferSize(uint(cfg.MaxMessageSize)),
-	}
+	var options []network.GRPCClientOption
+	// gRPC client options can be added here if needed in the future
 
 	reader := bufio.NewReader(os.Stdin)
-	client, err := network.NewTCPClient(cfg.EndPoint.String(), options...)
+	client, err := network.NewGRPCClient(cfg.EndPoint.String(), options...)
 	if err != nil {
 		logger.Fatal("failed to connect with server", zap.Error(err))
 	}
+	defer client.Close()
 
 	for {
 		fmt.Print("[gomemdb] > ")
