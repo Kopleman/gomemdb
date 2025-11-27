@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package gomemdb;
+
+option go_package = "github.com/Kopleman/gomemdb/api/proto;proto";
+
+// Database service for key-value operations
+service DatabaseService {
+  // ExecuteCommand processes a database command (GET, SET, DEL)
+  rpc ExecuteCommand(CommandRequest) returns (CommandResponse);
+}
+
+// CommandRequest represents a database command as a string
+message CommandRequest {
+  string query = 1; // Command string, e.g., "GET key", "SET key value", "DEL key"
+}
+
+// CommandResponse represents the result of a command execution
+message CommandResponse {
+  bool success = 1;
+  string result = 2; // Value for GET, empty for SET/DEL
+  string error = 3; // Error message if success is false
+}
+
