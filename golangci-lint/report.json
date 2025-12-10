@@ -1,0 +1,949 @@
+{
+  "Issues": [
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// GRPCClient wraps gRPC client implementation"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 181,
+        "Line": 14,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 181,
+              "End": 227,
+              "NewText": "Ly8gR1JQQ0NsaWVudCB3cmFwcyBnUlBDIGNsaWVudCBpbXBsZW1lbnRhdGlvbi4="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// GRPCClientOption is a function type for configuring gRPC client"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 317,
+        "Line": 20,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 317,
+              "End": 383,
+              "NewText": "Ly8gR1JQQ0NsaWVudE9wdGlvbiBpcyBhIGZ1bmN0aW9uIHR5cGUgZm9yIGNvbmZpZ3VyaW5nIGdSUEMgY2xpZW50Lg=="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// NewGRPCClient creates a new gRPC client"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 432,
+        "Line": 23,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 432,
+              "End": 474,
+              "NewText": "Ly8gTmV3R1JQQ0NsaWVudCBjcmVhdGVzIGEgbmV3IGdSUEMgY2xpZW50Lg=="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// This method signature matches TCP client for easy migration"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 1040,
+        "Line": 49,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 1040,
+              "End": 1102,
+              "NewText": "Ly8gVGhpcyBtZXRob2Qgc2lnbmF0dXJlIG1hdGNoZXMgVENQIGNsaWVudCBmb3IgZWFzeSBtaWdyYXRpb24u"
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// Close closes the gRPC client connection"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 1773,
+        "Line": 78,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 1773,
+              "End": 1815,
+              "NewText": "Ly8gQ2xvc2UgY2xvc2VzIHRoZSBnUlBDIGNsaWVudCBjb25uZWN0aW9uLg=="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// GRPCServerOption is a function type for configuring gRPC server"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_server.go",
+        "Offset": 190,
+        "Line": 14,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 190,
+              "End": 256,
+              "NewText": "Ly8gR1JQQ1NlcnZlck9wdGlvbiBpcyBhIGZ1bmN0aW9uIHR5cGUgZm9yIGNvbmZpZ3VyaW5nIGdSUEMgc2VydmVyLg=="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// GRPCServer wraps gRPC server implementation"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_server.go",
+        "Offset": 320,
+        "Line": 17,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 320,
+              "End": 366,
+              "NewText": "Ly8gR1JQQ1NlcnZlciB3cmFwcyBnUlBDIHNlcnZlciBpbXBsZW1lbnRhdGlvbi4="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// NewGRPCServer creates a new gRPC server"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_server.go",
+        "Offset": 534,
+        "Line": 26,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 534,
+              "End": 576,
+              "NewText": "Ly8gTmV3R1JQQ1NlcnZlciBjcmVhdGVzIGEgbmV3IGdSUEMgc2VydmVyLg=="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// ExecuteCommand implements DatabaseServiceServer interface"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_server.go",
+        "Offset": 1338,
+        "Line": 60,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 1338,
+              "End": 1398,
+              "NewText": "Ly8gRXhlY3V0ZUNvbW1hbmQgaW1wbGVtZW50cyBEYXRhYmFzZVNlcnZpY2VTZXJ2ZXIgaW50ZXJmYWNlLg=="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// Stop stops the gRPC server gracefully"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_server.go",
+        "Offset": 1859,
+        "Line": 79,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 1859,
+              "End": 1899,
+              "NewText": "Ly8gU3RvcCBzdG9wcyB0aGUgZ1JQQyBzZXJ2ZXIgZ3JhY2VmdWxseS4="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "godot",
+      "Text": "Comment should end in a period",
+      "Severity": "error",
+      "SourceLines": [
+        "// This method signature matches the TCP server for easy migration"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_server.go",
+        "Offset": 2050,
+        "Line": 87,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 2050,
+              "End": 2116,
+              "NewText": "Ly8gVGhpcyBtZXRob2Qgc2lnbmF0dXJlIG1hdGNoZXMgdGhlIFRDUCBzZXJ2ZXIgZm9yIGVhc3kgbWlncmF0aW9uLg=="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "gofmt",
+      "Text": "File is not properly formatted",
+      "Severity": "error",
+      "SourceLines": [
+        ""
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 1772,
+        "Line": 77,
+        "Column": 1
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "",
+          "TextEdits": [
+            {
+              "Pos": 1772,
+              "End": 1772,
+              "NewText": ""
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "lll",
+      "Text": "The line is 129 characters long, which exceeds the maximum of 120 characters.",
+      "Severity": "error",
+      "SourceLines": [
+        "func NewGRPCServer(address string, db *database.DataBase, logger *zap.Logger, options ...GRPCServerOption) (*GRPCServer, error) {"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_server.go",
+        "Offset": 577,
+        "Line": 27,
+        "Column": 1
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "mnd",
+      "Text": "Magic number: 30, in <argument> detected",
+      "Severity": "error",
+      "SourceLines": [
+        "\tctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 1304,
+        "Line": 54,
+        "Column": 59
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "nilerr",
+      "Text": "error is not nil (line 63) but it returns nil",
+      "Severity": "error",
+      "SourceLines": [
+        "\t\treturn &proto.CommandResponse{"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_server.go",
+        "Offset": 1663,
+        "Line": 65,
+        "Column": 3
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "protogetter",
+      "Text": "avoid direct access to proto field resp.Success, use resp.GetSuccess() instead",
+      "Severity": "error",
+      "SourceLines": [
+        "\tif resp.Success {"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 1573,
+        "Line": 67,
+        "Column": 5
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "avoid direct access to proto field resp.Success, use resp.GetSuccess() instead",
+          "TextEdits": [
+            {
+              "Pos": 1573,
+              "End": 1585,
+              "NewText": "cmVzcC5HZXRTdWNjZXNzKCk="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "protogetter",
+      "Text": "avoid direct access to proto field resp.Result, use resp.GetResult() instead",
+      "Severity": "error",
+      "SourceLines": [
+        "\t\tif resp.Result != \"\" {"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 1593,
+        "Line": 68,
+        "Column": 6
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "avoid direct access to proto field resp.Result, use resp.GetResult() instead",
+          "TextEdits": [
+            {
+              "Pos": 1593,
+              "End": 1604,
+              "NewText": "cmVzcC5HZXRSZXN1bHQoKQ=="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "protogetter",
+      "Text": "avoid direct access to proto field resp.Result, use resp.GetResult() instead",
+      "Severity": "error",
+      "SourceLines": [
+        "\t\t\treturn []byte(fmt.Sprintf(\"[ok] %s\", resp.Result)), nil"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 1653,
+        "Line": 69,
+        "Column": 41
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "avoid direct access to proto field resp.Result, use resp.GetResult() instead",
+          "TextEdits": [
+            {
+              "Pos": 1653,
+              "End": 1664,
+              "NewText": "cmVzcC5HZXRSZXN1bHQoKQ=="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "protogetter",
+      "Text": "avoid direct access to proto field resp.Error, use resp.GetError() instead",
+      "Severity": "error",
+      "SourceLines": [
+        "\treturn []byte(fmt.Sprintf(\"[error] %s\", resp.Error)), nil"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 1751,
+        "Line": 74,
+        "Column": 42
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "avoid direct access to proto field resp.Error, use resp.GetError() instead",
+          "TextEdits": [
+            {
+              "Pos": 1751,
+              "End": 1761,
+              "NewText": "cmVzcC5HZXRFcnJvcigp"
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "protogetter",
+      "Text": "avoid direct access to proto field req.Query, use req.GetQuery() instead",
+      "Severity": "error",
+      "SourceLines": [
+        "\tresult, handleErr := s.db.HandleQuery(ctx, req.Query)"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_server.go",
+        "Offset": 1627,
+        "Line": 63,
+        "Column": 45
+      },
+      "SuggestedFixes": [
+        {
+          "Message": "avoid direct access to proto field req.Query, use req.GetQuery() instead",
+          "TextEdits": [
+            {
+              "Pos": 1627,
+              "End": 1636,
+              "NewText": "cmVxLkdldFF1ZXJ5KCk="
+            }
+          ]
+        }
+      ],
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    },
+    {
+      "FromLinter": "staticcheck",
+      "Text": "SA1019: grpc.Dial is deprecated: use NewClient instead.  Will be supported throughout 1.x. ",
+      "Severity": "error",
+      "SourceLines": [
+        "\tconn, err := grpc.Dial(address, opts...)"
+      ],
+      "Pos": {
+        "Filename": "internal/network/grpc_client.go",
+        "Offset": 767,
+        "Line": 35,
+        "Column": 15
+      },
+      "ExpectNoLint": false,
+      "ExpectedNoLintLinter": ""
+    }
+  ],
+  "Report": {
+    "Linters": [
+      {
+        "Name": "arangolint"
+      },
+      {
+        "Name": "asasalint",
+        "Enabled": true
+      },
+      {
+        "Name": "asciicheck",
+        "Enabled": true
+      },
+      {
+        "Name": "bidichk",
+        "Enabled": true
+      },
+      {
+        "Name": "bodyclose",
+        "Enabled": true
+      },
+      {
+        "Name": "canonicalheader"
+      },
+      {
+        "Name": "containedctx",
+        "Enabled": true
+      },
+      {
+        "Name": "contextcheck"
+      },
+      {
+        "Name": "copyloopvar"
+      },
+      {
+        "Name": "cyclop"
+      },
+      {
+        "Name": "decorder"
+      },
+      {
+        "Name": "depguard"
+      },
+      {
+        "Name": "dogsled"
+      },
+      {
+        "Name": "dupl",
+        "Enabled": true
+      },
+      {
+        "Name": "dupword",
+        "Enabled": true
+      },
+      {
+        "Name": "durationcheck",
+        "Enabled": true
+      },
+      {
+        "Name": "embeddedstructfieldcheck"
+      },
+      {
+        "Name": "errcheck",
+        "Enabled": true
+      },
+      {
+        "Name": "errchkjson"
+      },
+      {
+        "Name": "errname",
+        "Enabled": true
+      },
+      {
+        "Name": "errorlint",
+        "Enabled": true
+      },
+      {
+        "Name": "exhaustive",
+        "Enabled": true
+      },
+      {
+        "Name": "exhaustruct"
+      },
+      {
+        "Name": "exptostd"
+      },
+      {
+        "Name": "forbidigo"
+      },
+      {
+        "Name": "forcetypeassert",
+        "Enabled": true
+      },
+      {
+        "Name": "funcorder"
+      },
+      {
+        "Name": "fatcontext"
+      },
+      {
+        "Name": "funlen"
+      },
+      {
+        "Name": "gci"
+      },
+      {
+        "Name": "ginkgolinter"
+      },
+      {
+        "Name": "gocheckcompilerdirectives",
+        "Enabled": true
+      },
+      {
+        "Name": "gochecknoglobals"
+      },
+      {
+        "Name": "gochecknoinits"
+      },
+      {
+        "Name": "gochecksumtype"
+      },
+      {
+        "Name": "gocognit"
+      },
+      {
+        "Name": "goconst",
+        "Enabled": true
+      },
+      {
+        "Name": "gocritic",
+        "Enabled": true
+      },
+      {
+        "Name": "gocyclo"
+      },
+      {
+        "Name": "godot",
+        "Enabled": true
+      },
+      {
+        "Name": "godox"
+      },
+      {
+        "Name": "err113"
+      },
+      {
+        "Name": "gofmt",
+        "Enabled": true
+      },
+      {
+        "Name": "gofumpt"
+      },
+      {
+        "Name": "golines"
+      },
+      {
+        "Name": "goheader"
+      },
+      {
+        "Name": "goimports",
+        "Enabled": true
+      },
+      {
+        "Name": "mnd",
+        "Enabled": true
+      },
+      {
+        "Name": "gomoddirectives"
+      },
+      {
+        "Name": "gomodguard"
+      },
+      {
+        "Name": "goprintffuncname",
+        "Enabled": true
+      },
+      {
+        "Name": "gosec",
+        "Enabled": true
+      },
+      {
+        "Name": "gosmopolitan"
+      },
+      {
+        "Name": "govet",
+        "Enabled": true
+      },
+      {
+        "Name": "grouper",
+        "Enabled": true
+      },
+      {
+        "Name": "iface"
+      },
+      {
+        "Name": "importas"
+      },
+      {
+        "Name": "inamedparam"
+      },
+      {
+        "Name": "ineffassign",
+        "Enabled": true
+      },
+      {
+        "Name": "interfacebloat"
+      },
+      {
+        "Name": "intrange",
+        "Enabled": true
+      },
+      {
+        "Name": "ireturn"
+      },
+      {
+        "Name": "lll",
+        "Enabled": true
+      },
+      {
+        "Name": "loggercheck",
+        "Enabled": true
+      },
+      {
+        "Name": "maintidx"
+      },
+      {
+        "Name": "makezero",
+        "Enabled": true
+      },
+      {
+        "Name": "mirror",
+        "Enabled": true
+      },
+      {
+        "Name": "misspell"
+      },
+      {
+        "Name": "musttag",
+        "Enabled": true
+      },
+      {
+        "Name": "nakedret"
+      },
+      {
+        "Name": "nestif"
+      },
+      {
+        "Name": "nilerr",
+        "Enabled": true
+      },
+      {
+        "Name": "nilnesserr"
+      },
+      {
+        "Name": "nilnil",
+        "Enabled": true
+      },
+      {
+        "Name": "nlreturn"
+      },
+      {
+        "Name": "noctx"
+      },
+      {
+        "Name": "noinlineerr"
+      },
+      {
+        "Name": "nonamedreturns"
+      },
+      {
+        "Name": "nosprintfhostport",
+        "Enabled": true
+      },
+      {
+        "Name": "paralleltest"
+      },
+      {
+        "Name": "perfsprint"
+      },
+      {
+        "Name": "prealloc",
+        "Enabled": true
+      },
+      {
+        "Name": "predeclared",
+        "Enabled": true
+      },
+      {
+        "Name": "promlinter"
+      },
+      {
+        "Name": "protogetter",
+        "Enabled": true
+      },
+      {
+        "Name": "reassign",
+        "Enabled": true
+      },
+      {
+        "Name": "recvcheck"
+      },
+      {
+        "Name": "revive",
+        "Enabled": true
+      },
+      {
+        "Name": "rowserrcheck",
+        "Enabled": true
+      },
+      {
+        "Name": "sloglint",
+        "Enabled": true
+      },
+      {
+        "Name": "sqlclosecheck",
+        "Enabled": true
+      },
+      {
+        "Name": "spancheck"
+      },
+      {
+        "Name": "staticcheck",
+        "Enabled": true
+      },
+      {
+        "Name": "swaggo"
+      },
+      {
+        "Name": "tagalign"
+      },
+      {
+        "Name": "tagliatelle"
+      },
+      {
+        "Name": "testableexamples",
+        "Enabled": true
+      },
+      {
+        "Name": "testifylint"
+      },
+      {
+        "Name": "testpackage"
+      },
+      {
+        "Name": "thelper",
+        "Enabled": true
+      },
+      {
+        "Name": "tparallel",
+        "Enabled": true
+      },
+      {
+        "Name": "typecheck",
+        "Enabled": true
+      },
+      {
+        "Name": "unconvert",
+        "Enabled": true
+      },
+      {
+        "Name": "unparam",
+        "Enabled": true
+      },
+      {
+        "Name": "unused",
+        "Enabled": true
+      },
+      {
+        "Name": "usestdlibvars",
+        "Enabled": true
+      },
+      {
+        "Name": "usetesting"
+      },
+      {
+        "Name": "varnamelen"
+      },
+      {
+        "Name": "wastedassign",
+        "Enabled": true
+      },
+      {
+        "Name": "whitespace",
+        "Enabled": true
+      },
+      {
+        "Name": "wrapcheck",
+        "Enabled": true
+      },
+      {
+        "Name": "wsl"
+      },
+      {
+        "Name": "wsl_v5"
+      },
+      {
+        "Name": "zerologlint",
+        "Enabled": true
+      },
+      {
+        "Name": "nolintlint",
+        "Enabled": true
+      }
+    ]
+  }
+}

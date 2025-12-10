@@ -1,0 +1,378 @@
+version: "2"
+run:
+  go: "1.22"
+  modules-download-mode: readonly
+  issues-exit-code: 1
+  tests: true
+  allow-parallel-runners: false
+output:
+  formats:
+    tab:
+      print-linter-name: false
+      colors: false
+    text:
+      print-linter-name: false
+      print-issued-lines: false
+      colors: false
+    json:
+      path: stdout
+  path-prefix: ""
+linters:
+  default: none
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - containedctx
+    - dupl
+    - dupword
+    - durationcheck
+    - errcheck
+    - errname
+    - errorlint
+    - exhaustive
+    - forcetypeassert
+    - gocheckcompilerdirectives
+    - goconst
+    - gocritic
+    - godot
+    - goprintffuncname
+    - gosec
+    - govet
+    - grouper
+    - ineffassign
+    - intrange
+    - lll
+    - loggercheck
+    - makezero
+    - mirror
+    - mnd
+    - musttag
+    - nilerr
+    - nilnil
+    - nolintlint
+    - nosprintfhostport
+    - prealloc
+    - predeclared
+    - protogetter
+    - reassign
+    - revive
+    - rowserrcheck
+    - sloglint
+    - sqlclosecheck
+    - staticcheck
+    - testableexamples
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    - wastedassign
+    - whitespace
+    - wrapcheck
+    - zerologlint
+  settings:
+    dupl:
+      threshold: 100
+    errcheck:
+      disable-default-exclusions: false
+      check-type-assertions: true
+      check-blank: false
+    errorlint:
+      errorf: true
+      errorf-multi: true
+      asserts: true
+      comparison: true
+    exhaustive:
+      check:
+        - switch
+        - map
+      default-signifies-exhaustive: true
+      ignore-enum-members: ""
+      ignore-enum-types: ""
+      package-scope-only: false
+      explicit-exhaustive-map: false
+      explicit-exhaustive-switch: false
+    goconst:
+      match-constant: true
+      min-len: 3
+      min-occurrences: 4
+      numbers: false
+      ignore-calls: false
+    gocritic:
+      enabled-checks:
+        - appendCombine
+        - badLock
+        - badSorting
+        - boolExprSimplify
+        - builtinShadow
+        - builtinShadowDecl
+        - commentedOutImport
+        - deferInLoop
+        - deferUnlambda
+        - dynamicFmtString
+        - emptyDecl
+        - emptyFallthrough
+        - equalFold
+        - evalOrder
+        - exposedSyncMutex
+        - externalErrorReassign
+        - filepathJoin
+        - hexLiteral
+        - httpNoBody
+        - hugeParam
+        - importShadow
+        - indexAlloc
+        - initClause
+        - nilValReturn
+        - octalLiteral
+        - preferDecodeRune
+        - preferFilepathJoin
+        - preferFprint
+        - preferStringWriter
+        - preferWriteByte
+        - ptrToRefParam
+        - rangeExprCopy
+        - rangeValCopy
+        - redundantSprint
+        - returnAfterHttpError
+        - sliceClear
+        - sloppyReassign
+        - sprintfQuotedString
+        - stringConcatSimplify
+        - stringXbytes
+        - timeExprSimplify
+        - todoCommentWithoutDetail
+        - typeAssertChain
+        - typeUnparen
+        - uncheckedInlineErr
+        - unlabelStmt
+        - weakCond
+        - whyNoLint
+        - yodaStyleExpr
+    godot:
+      scope: toplevel
+      capital: true
+      period: true
+    gosec:
+      includes:
+        - G104
+        - G109
+        - G110
+        - G201
+        - G202
+        - G203
+        - G301
+        - G302
+        - G303
+        - G305
+        - G306
+        - G307
+        - G402
+        - G403
+    govet:
+      disable:
+        - shadow
+      enable-all: true
+    grouper:
+      const-require-single-const: false
+      const-require-grouping: false
+      import-require-single-import: true
+      import-require-grouping: false
+      type-require-single-type: false
+      type-require-grouping: false
+      var-require-single-var: false
+      var-require-grouping: false
+    lll:
+      line-length: 120
+      tab-width: 1
+    loggercheck:
+      kitlog: true
+      klog: true
+      logr: true
+      zap: true
+      require-string-key: false
+      no-printf-like: false
+    makezero:
+      always: false
+    nilnil:
+      checked-types:
+        - ptr
+        - func
+        - iface
+        - map
+        - chan
+    nolintlint:
+      require-explanation: true
+      require-specific: false
+      allow-unused: false
+    perfsprint:
+      int-conversion: true
+      err-error: true
+      errorf: true
+      sprintf1: true
+      strconcat: true
+    prealloc:
+      simple: true
+      range-loops: true
+      for-loops: false
+    predeclared:
+      qualified-name: false
+    protogetter:
+      skip-any-generated: true
+      replace-first-arg-in-append: false
+    reassign:
+      patterns:
+        - .*
+    revive:
+      confidence: 0.8
+      severity: error
+      enable-all-rules: false
+      rules:
+        - name: atomic
+        - name: context-as-argument
+          arguments:
+            - allowTypesBefore: '*testing.T'
+        - name: context-keys-type
+        - name: defer
+          arguments:
+            - - recover
+              - return
+        - name: dot-imports
+        - name: identical-branches
+        - name: increment-decrement
+        - name: range-val-in-closure
+        - name: range-val-address
+        - name: unconditional-recursion
+        - name: unnecessary-stmt
+        - name: unreachable-code
+        - name: useless-break
+        - name: waitgroup-by-value
+    sloglint:
+      no-mixed-args: true
+      kv-only: false
+      attr-only: false
+      no-global: all
+      context: all
+      static-msg: false
+      no-raw-keys: false
+      args-on-sep-lines: false
+    staticcheck:
+      checks:
+        - all
+        - -SA1014
+        - -SA1028
+        - -ST1000
+      initialisms:
+        - ACL
+        - API
+        - ASCII
+        - CPU
+        - CSS
+        - DNS
+        - EOF
+        - GUID
+        - HTML
+        - HTTP
+        - HTTPS
+        - ID
+        - IP
+        - JSON
+        - QPS
+        - RAM
+        - RPC
+        - SLA
+        - SMTP
+        - SQL
+        - SSH
+        - TCP
+        - TLS
+        - TTL
+        - UDP
+        - UI
+        - GID
+        - UID
+        - UUID
+        - URI
+        - URL
+        - UTF8
+        - VM
+        - XML
+        - XMPP
+        - XSRF
+        - XSS
+        - SIP
+        - RTP
+        - AMQP
+        - DB
+        - TS
+    thelper:
+      test:
+        first: true
+        name: true
+        begin: true
+      fuzz:
+        first: false
+        name: false
+        begin: false
+      benchmark:
+        first: true
+        name: true
+        begin: true
+      tb:
+        first: true
+        name: true
+        begin: true
+    unparam:
+      check-exported: false
+    usestdlibvars:
+      http-method: true
+      http-status-code: true
+      time-weekday: true
+      time-month: true
+      time-layout: true
+      crypto-hash: true
+      default-rpc-path: true
+      sql-isolation-level: true
+      tls-signature-scheme: true
+      constant-kind: true
+    whitespace:
+      multi-if: false
+      multi-func: false
+  exclusions:
+    generated: lax
+    rules:
+      - path: _test\.go
+        text: 'fieldalignment: struct with \d+ pointer bytes could be \d+'
+      - linters:
+          - goconst
+        path: (.+)_test\.go
+    paths:
+      - bin
+      - scripts
+      - .ci
+      - .gradle
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  uniq-by-line: true
+  new: false
+  fix: false
+severity:
+  default: error
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    gofmt:
+      simplify: false
+  exclusions:
+    generated: lax
+    paths:
+      - bin
+      - scripts
+      - .ci
+      - .gradle
