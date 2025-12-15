@@ -7,20 +7,34 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Kopleman/gomemdb/internal/utils"
 	"github.com/joho/godotenv"
 )
 
 const (
-	defaultMaxConnections = 100
-	defaultMaxMessageSize = "4KB"
-	defaultIdleTimeout    = time.Minute
+	defaultMaxConnections    = 100
+	defaultMaxMessageSize    = "4KB"
+	defaultIdleTimeout       = time.Minute
+	defaultWALBatchSize      = 100
+	defaultWALBatchTimeout   = 10
+	defaultWALMaxSegmentSize = 10 * 1024 * 1024 // 10MB
 )
+
+// WALConfig represents Write-Ahead Log configuration.
+type WALConfig struct {
+	DataDirectory        string
+	FlushingBatchSize    int
+	FlushingBatchTimeout time.Duration
+	MaxSegmentSize       int64
+	Enabled              bool
+}
 
 // Config представляет конфигурацию приложения.
 type Config struct {
 	RunEnv         string
 	Address        string
 	MaxMessageSize string
+	WAL            WALConfig
 	MaxConnections int
 	IdleTimeout    time.Duration
 }
@@ -30,12 +44,28 @@ func LoadConfig() (*Config, error) {
 	// Загружаем .env файл, если он существует
 	_ = godotenv.Load()
 
+	walEnabled := getEnv("WAL_ENABLED", "") != ""
+	walConfig := WALConfig{
+		DataDirectory:        getEnv("WAL_DATA_DIRECTORY", "./data/gomemdb/wal"),
+		FlushingBatchSize:    getEnvInt("WAL_FLUSHING_BATCH_SIZE", defaultWALBatchSize),
+		FlushingBatchTimeout: getEnvDuration("WAL_FLUSHING_BATCH_TIMEOUT", defaultWALBatchTimeout*time.Millisecond),
+		MaxSegmentSize:       defaultWALMaxSegmentSize,
+		Enabled:              walEnabled,
+	}
+
+	if maxSegmentSizeStr := getEnv("WAL_MAX_SEGMENT_SIZE", ""); maxSegmentSizeStr != "" {
+		if parsedSize, err := utils.ParseSize(maxSegmentSizeStr); err == nil {
+			walConfig.MaxSegmentSize = int64(parsedSize)
+		}
+	}
+
 	config := &Config{
 		RunEnv:         getEnv("ENV", "development"),
 		Address:        getEnv("ADDRESS", ":8080"),
 		MaxConnections: getEnvInt("MAX_CONNECTIONS", defaultMaxConnections),
 		MaxMessageSize: getEnv("MAX_MESSAGE_SIZE", defaultMaxMessageSize),
 		IdleTimeout:    getEnvDuration("IDLE_TIMEOUT", defaultIdleTimeout),
+		WAL:            walConfig,
 	}
 
 	if err := config.validate(); err != nil {
