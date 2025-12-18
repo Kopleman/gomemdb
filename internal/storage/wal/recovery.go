@@ -5,11 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
-	"path/filepath"
-	"sort"
-	"strconv"
-	"strings"
 
 	"github.com/Kopleman/gomemdb/internal/command"
 	"go.uber.org/zap"
@@ -17,27 +12,10 @@ import (
 
 // Recover reads all WAL segments and returns commands in order.
 func Recover(dataDirectory string, logger *zap.Logger) ([]command.Command, error) {
-	// Check if directory exists
-	if _, err := os.Stat(dataDirectory); os.IsNotExist(err) {
-		logger.Info("WAL directory does not exist, skipping recovery")
-		return nil, nil
-	}
-
-	// List all segment files
-	entries, err := os.ReadDir(dataDirectory)
+	// Find all segment files using filesystem component
+	segments, err := FindSegments(dataDirectory)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read WAL directory: %w", err)
-	}
-
-	// Filter and sort segment files
-	segments := make([]string, 0)
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		if strings.HasPrefix(entry.Name(), walFilePrefix) && strings.HasSuffix(entry.Name(), walFileSuffix) {
-			segments = append(segments, entry.Name())
-		}
+		return nil, fmt.Errorf("failed to find WAL segments: %w", err)
 	}
 
 	if len(segments) == 0 {
@@ -45,22 +23,14 @@ func Recover(dataDirectory string, logger *zap.Logger) ([]command.Command, error
 		return nil, nil
 	}
 
-	// Sort segments by sequence number
-	sort.Slice(segments, func(i, j int) bool {
-		seqI := extractSequenceNumber(segments[i])
-		seqJ := extractSequenceNumber(segments[j])
-		return seqI < seqJ
-	})
-
 	logger.Info("recovering from WAL segments", zap.Int("count", len(segments)))
 
 	// Read all segments
 	var allCommands []command.Command
-	for _, segName := range segments {
-		segPath := filepath.Join(dataDirectory, segName)
-		commands, err := readSegment(segPath, logger)
+	for _, seg := range segments {
+		commands, err := readSegment(seg.Path, logger)
 		if err != nil {
-			return nil, fmt.Errorf("failed to read segment %s: %w", segName, err)
+			return nil, fmt.Errorf("failed to read segment %s: %w", seg.Filename, err)
 		}
 		allCommands = append(allCommands, commands...)
 	}
@@ -69,30 +39,13 @@ func Recover(dataDirectory string, logger *zap.Logger) ([]command.Command, error
 	return allCommands, nil
 }
 
-// extractSequenceNumber extracts sequence number from segment filename.
-// Format: wal_0000000000000001.log -> 1.
-func extractSequenceNumber(filename string) uint64 {
-	// Remove prefix "wal_" and suffix ".log".
-	seqStr := strings.TrimPrefix(filename, walFilePrefix)
-	seqStr = strings.TrimSuffix(seqStr, walFileSuffix)
-	seq, err := strconv.ParseUint(seqStr, 10, 64)
-	if err != nil {
-		return 0
-	}
-	return seq
-}
-
 // readSegment reads all commands from a segment file.
 func readSegment(path string, logger *zap.Logger) ([]command.Command, error) {
-	file, err := os.Open(path)
+	file, err := OpenFile(path, logger)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open segment file: %w", err)
 	}
-	defer func() {
-		if closeErr := file.Close(); closeErr != nil {
-			logger.Error("failed to close segment file", zap.Error(closeErr), zap.String("path", path))
-		}
-	}()
+	defer file.Close()
 
 	var commands []command.Command
 

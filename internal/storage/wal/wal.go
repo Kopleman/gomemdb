@@ -4,10 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
-	"path/filepath"
-	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -28,26 +24,24 @@ var (
 
 // pendingCommand represents a command waiting to be flushed.
 type pendingCommand struct {
-	doneCh chan struct{}
-	errCh  chan error
-	cmd    command.Command
+	resultCh chan error
+	cmd      command.Command
 }
 
 // WAL represents Write-Ahead Log implementation.
 type WAL struct {
-	flushWorkerDone chan struct{}
-	logger          *zap.Logger
-	currentSegment  *segment
-	flushCh         chan struct{}
-	flushTimer      *time.Timer
-	cancel          context.CancelFunc
-	pending         []pendingCommand
-	config          Config
-	wg              sync.WaitGroup
-	segmentCounter  uint64
-	mu              sync.RWMutex
-	batchMu         sync.Mutex
-	closed          bool
+	logger         *zap.Logger
+	currentSegment *segment
+	timer          *time.Timer
+	flushCh        chan struct{}
+	done           chan struct{}
+	pending        []pendingCommand
+	config         Config
+	wg             sync.WaitGroup
+	segmentCounter uint64
+	closeOnce      sync.Once
+	mu             sync.Mutex
+	closed         bool
 }
 
 // Config represents WAL configuration.
@@ -65,66 +59,30 @@ func New(config Config, logger *zap.Logger) (*WAL, error) {
 		return nil, ErrWALDisabled
 	}
 
-	const dirPerm = 0o750
-	if err := os.MkdirAll(config.DataDirectory, dirPerm); err != nil {
+	if err := MkDir(config.DataDirectory); err != nil {
 		return nil, fmt.Errorf("failed to create WAL directory: %w", err)
 	}
 
 	// Find maximum segment number to continue from
-	maxSegmentNum, err := findMaxSegmentNumber(config.DataDirectory)
+	maxSegmentNum, err := FindMaxSegmentNumber(config.DataDirectory)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find max segment number: %w", err)
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-
 	w := &WAL{
-		config:          config,
-		logger:          logger,
-		segmentCounter:  maxSegmentNum,
-		pending:         make([]pendingCommand, 0, config.FlushingBatchSize),
-		flushCh:         make(chan struct{}, 1),
-		flushWorkerDone: make(chan struct{}),
-		cancel:          cancel,
+		config:         config,
+		logger:         logger,
+		segmentCounter: maxSegmentNum,
+		pending:        make([]pendingCommand, 0, config.FlushingBatchSize),
+		flushCh:        make(chan struct{}, 1),
+		done:           make(chan struct{}),
 	}
 
 	// Start flush worker
 	w.wg.Add(1)
-	go w.flushWorker(ctx)
+	go w.flushWorker()
 
 	return w, nil
-}
-
-// findMaxSegmentNumber finds the maximum segment number in the data directory.
-func findMaxSegmentNumber(dataDirectory string) (uint64, error) {
-	entries, err := os.ReadDir(dataDirectory)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return 0, nil
-		}
-		return 0, fmt.Errorf("failed to read directory: %w", err)
-	}
-
-	maxNum := uint64(0)
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		if !strings.HasPrefix(entry.Name(), walFilePrefix) || !strings.HasSuffix(entry.Name(), walFileSuffix) {
-			continue
-		}
-		seqStr := strings.TrimPrefix(entry.Name(), walFilePrefix)
-		seqStr = strings.TrimSuffix(seqStr, walFileSuffix)
-		seq, err := strconv.ParseUint(seqStr, 10, 64)
-		if err != nil {
-			continue
-		}
-		if seq > maxNum {
-			maxNum = seq
-		}
-	}
-
-	return maxNum, nil
 }
 
 // Write appends a command to the WAL batch.
@@ -134,34 +92,30 @@ func (w *WAL) Write(ctx context.Context, cmd command.Command) error {
 		return nil // WAL disabled
 	}
 
-	w.mu.RLock()
+	w.mu.Lock()
 	if w.closed {
-		w.mu.RUnlock()
+		w.mu.Unlock()
 		return ErrWALClosed
 	}
-	w.mu.RUnlock()
 
-	// Create channels for notification
-	doneCh := make(chan struct{})
-	errCh := make(chan error, 1)
+	// Create channel for notification
+	resultCh := make(chan error, 1)
 
 	pending := pendingCommand{
-		cmd:    cmd,
-		doneCh: doneCh,
-		errCh:  errCh,
+		cmd:      cmd,
+		resultCh: resultCh,
 	}
 
-	w.batchMu.Lock()
 	w.pending = append(w.pending, pending)
 	batchSize := len(w.pending)
 	shouldFlush := batchSize >= w.config.FlushingBatchSize
 
-	// Reset timer if this is the first command in a new batch
+	// Start or reset timeout timer if this is the first command in a new batch
 	if batchSize == 1 {
-		if w.flushTimer != nil {
-			w.flushTimer.Stop()
+		if w.timer != nil {
+			w.timer.Stop()
 		}
-		w.flushTimer = time.AfterFunc(w.config.FlushingBatchTimeout, func() {
+		w.timer = time.AfterFunc(w.config.FlushingBatchTimeout, func() {
 			select {
 			case w.flushCh <- struct{}{}:
 			default:
@@ -169,8 +123,9 @@ func (w *WAL) Write(ctx context.Context, cmd command.Command) error {
 		})
 	}
 
-	w.batchMu.Unlock()
+	w.mu.Unlock()
 
+	// Trigger flush if batch is full
 	if shouldFlush {
 		select {
 		case w.flushCh <- struct{}{}:
@@ -182,39 +137,40 @@ func (w *WAL) Write(ctx context.Context, cmd command.Command) error {
 	select {
 	case <-ctx.Done():
 		return fmt.Errorf("context cancelled: %w", ctx.Err())
-	case err := <-errCh:
-		return fmt.Errorf("WAL write error: %w", err)
-	case <-doneCh:
+	case err := <-resultCh:
+		if err != nil {
+			return fmt.Errorf("WAL write error: %w", err)
+		}
 		return nil
 	}
 }
 
 // flushWorker periodically flushes batches to disk.
-func (w *WAL) flushWorker(ctx context.Context) {
+func (w *WAL) flushWorker() {
 	defer w.wg.Done()
 
 	for {
 		select {
-		case <-ctx.Done():
+		case <-w.done:
 			// Flush remaining batch before exit
-			w.batchMu.Lock()
+			w.mu.Lock()
 			if len(w.pending) > 0 {
 				w.flushBatch()
 			}
-			w.batchMu.Unlock()
-			close(w.flushWorkerDone)
+			w.mu.Unlock()
 			return
 		case <-w.flushCh:
-			w.batchMu.Lock()
+			w.mu.Lock()
 			if len(w.pending) > 0 {
 				w.flushBatch()
 			}
-			w.batchMu.Unlock()
+			w.mu.Unlock()
 		}
 	}
 }
 
 // flushBatch writes the current batch to disk and clears it.
+// Must be called with mu locked.
 func (w *WAL) flushBatch() {
 	if len(w.pending) == 0 {
 		return
@@ -224,19 +180,17 @@ func (w *WAL) flushBatch() {
 	copy(batch, w.pending)
 	w.pending = w.pending[:0]
 
-	if w.flushTimer != nil {
-		w.flushTimer.Stop()
-		w.flushTimer = nil
+	// Stop timer if it's running
+	if w.timer != nil {
+		w.timer.Stop()
+		w.timer = nil
 	}
-
-	w.mu.Lock()
-	defer w.mu.Unlock()
 
 	if w.closed {
 		// Notify all pending commands about error
 		for _, p := range batch {
 			select {
-			case p.errCh <- ErrWALClosed:
+			case p.resultCh <- ErrWALClosed:
 			default:
 			}
 		}
@@ -251,7 +205,7 @@ func (w *WAL) flushBatch() {
 			// Notify all pending commands about error
 			for _, p := range batch {
 				select {
-				case p.errCh <- err:
+				case p.resultCh <- err:
 				default:
 				}
 			}
@@ -279,16 +233,10 @@ func (w *WAL) flushBatch() {
 	}
 
 	// Notify all commands in batch
-	if flushErr != nil {
-		for _, p := range batch {
-			select {
-			case p.errCh <- flushErr:
-			default:
-			}
-		}
-	} else {
-		for _, p := range batch {
-			close(p.doneCh)
+	for _, p := range batch {
+		select {
+		case p.resultCh <- flushErr:
+		default:
 		}
 	}
 
@@ -316,8 +264,7 @@ func (w *WAL) writeCommand(cmd command.Command) error {
 // createNewSegment creates a new WAL segment file.
 func (w *WAL) createNewSegment() (*segment, error) {
 	w.segmentCounter++
-	segmentName := fmt.Sprintf("%s%016d%s", walFilePrefix, w.segmentCounter, walFileSuffix)
-	segmentPath := filepath.Join(w.config.DataDirectory, segmentName)
+	segmentPath := BuildSegmentPath(w.config.DataDirectory, w.segmentCounter)
 	return newSegment(segmentPath, w.logger)
 }
 
@@ -333,32 +280,28 @@ func (w *WAL) Close() error {
 		return nil
 	}
 	w.closed = true
-	w.mu.Unlock()
 
-	// Cancel context to stop flush worker
-	w.cancel()
-
-	// Wait for flush worker to finish
-	<-w.flushWorkerDone
-
-	// Flush remaining batch
-	w.batchMu.Lock()
+	// Flush remaining batch before closing
 	if len(w.pending) > 0 {
 		w.flushBatch()
 	}
-	w.batchMu.Unlock()
 
 	// Close current segment
-	w.mu.Lock()
+	var closeErr error
 	if w.currentSegment != nil {
 		if err := w.currentSegment.Close(); err != nil {
-			w.mu.Unlock()
-			return fmt.Errorf("failed to close segment: %w", err)
+			closeErr = fmt.Errorf("failed to close segment: %w", err)
 		}
 	}
 	w.mu.Unlock()
 
+	// Signal flush worker to stop (safe to call multiple times)
+	w.closeOnce.Do(func() {
+		close(w.done)
+	})
+
+	// Wait for flush worker to finish
 	w.wg.Wait()
 
-	return nil
+	return closeErr
 }
