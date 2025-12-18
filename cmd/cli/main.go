@@ -9,6 +9,7 @@ import (
 
 	"github.com/Kopleman/gomemdb/internal/network"
 	"github.com/Kopleman/gomemdb/pkg/config"
+	"github.com/davecgh/go-spew/spew"
 	"go.uber.org/zap"
 )
 
@@ -19,6 +20,7 @@ func main() {
 	if cfgErr != nil {
 		logger.Fatal("failed to parse cli cfg", zap.Error(cfgErr))
 	}
+	spew.Dump(cfg)
 
 	var options []network.GRPCClientOption
 	// gRPC client options can be added here if needed in the future

@@ -17,11 +17,15 @@ type Storage interface {
 	Do(ctx context.Context, cmd command.Command) (string, error)
 }
 
-type DataBase struct {
-	s *bufio.Scanner
+type WALWriter interface {
+	Write(ctx context.Context, cmd command.Command) error
+}
 
+type DataBase struct {
+	s       *bufio.Scanner
 	p       Parser
 	storage Storage
+	wal     WALWriter
 	logger  *zap.Logger
 }
 
@@ -29,6 +33,7 @@ type RunArgs struct {
 	Reader  io.Reader
 	Parser  Parser
 	Storage Storage
+	WAL     WALWriter
 	Logger  *zap.Logger
 }
 
@@ -40,6 +45,7 @@ func New(args RunArgs) *DataBase {
 		s:       s,
 		p:       args.Parser,
 		storage: args.Storage,
+		wal:     args.WAL,
 		logger:  args.Logger,
 	}
 }
@@ -51,6 +57,15 @@ func (c *DataBase) HandleQuery(ctx context.Context, queryStr string) (string, er
 		return "", fmt.Errorf("failed to parse query: %s", queryStr)
 	}
 
+	// Write to WAL before executing command (only for SET and DEL)
+	if c.wal != nil && (cmd.Type == command.CommandSET || cmd.Type == command.CommandDEL) {
+		if err := c.wal.Write(ctx, cmd); err != nil {
+			c.logger.Error("WAL write error", zap.Error(err))
+			return "", fmt.Errorf("failed to write to WAL: %w", err)
+		}
+	}
+
+	// Execute command in storage engine
 	out, doErr := c.storage.Do(ctx, cmd)
 	if doErr != nil {
 		c.logger.Error("storage exec error", zap.Error(doErr))
